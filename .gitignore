@@ -1,0 +1,7 @@
+cropped_training_images_faces
+cropped_training_images_notfaces
+cropped_validation_images_faces
+cropped_validation_images_notfaces
+images_notfaces
+test_images
+*.jpg
