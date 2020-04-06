@@ -3,6 +3,8 @@ clear
 % run('../vlfeat-0.9.20/toolbox/vl_setup')
 
 pos_imageDir = 'cropped_training_images_faces';
+%pos_imageDir = 'false_negative_validation_images_faces';
+
 pos_imageList = dir(sprintf('%s/*.jpg', pos_imageDir));
 pos_nImages = length(pos_imageList);
 
@@ -23,6 +25,8 @@ if ~exist(pos_imageDir_v, 'dir')
 end
 
 neg_imageDir = 'cropped_training_images_notfaces';
+%neg_imageDir = 'false_positive_validation_images_faces';
+
 neg_imageList = dir(sprintf('%s/*.jpg', neg_imageDir));
 neg_nImages = length(neg_imageList);
 
@@ -43,8 +47,8 @@ if ~exist(neg_imageDir_v, 'dir')
 end
 
 
-cellSize = 6;
-featSize = 31*cellSize^2;
+cellSize = 4;
+featSize = 31*round(36/cellSize)^2;
 
 pos_feats = zeros(pos_nImages,featSize);
 for i=1:pos_nImages
