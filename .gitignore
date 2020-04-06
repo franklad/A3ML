@@ -2,6 +2,8 @@ cropped_training_images_faces
 cropped_training_images_notfaces
 cropped_validation_images_faces
 cropped_validation_images_notfaces
+false_negative_validation_images_faces
+false_positive_validation_images_faces
 images_notfaces
 test_images
 *.jpg
