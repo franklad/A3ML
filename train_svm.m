@@ -1,12 +1,12 @@
 %run('../vlfeat-0.9.20/toolbox/vl_setup')
 load('pos_neg_feats.mat')
 
-feats = cat(1,pos_feats,neg_feats);
-labels = cat(1,ones(pos_nImages,1),-1*ones(neg_nImages,1));
+feats = cat(1, pos_feats, neg_feats);
+labels = cat(1, ones(pos_nImages, 1), -1 * ones(neg_nImages, 1));
 
 lambda = 0.01;
-[w, b] = vl_svmtrain(feats',labels',lambda);
-save('my_svm.mat','w','b');
+[w, b] = vl_svmtrain(feats', labels', lambda);
+save('my_svm.mat', 'w', 'b');
 
 fprintf('Classifier performance on train data:\n')
 confidences = [pos_feats; neg_feats] * w + b;

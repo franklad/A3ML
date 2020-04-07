@@ -1,8 +1,8 @@
-function [tpr, fpr, tnr, fnr] = report_accuracy( confidences, label_vector )
+function [tpr, fpr, tnr, fnr] = report_accuracy(confidences, label_vector)
 % by James Hays
 
 correct_classification = sign(confidences .* label_vector);
-accuracy = 1 - sum(correct_classification <= 0)/length(correct_classification);
+accuracy = 1 - sum(correct_classification <= 0) / length(correct_classification);
 fprintf('  accuracy:   %.3f\n', accuracy);
 
 true_positives = (confidences >= 0) & (label_vector >= 0);
