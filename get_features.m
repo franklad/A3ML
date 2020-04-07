@@ -15,7 +15,7 @@ cellSize = 4;
 featSize = 31 * round(36 / cellSize) ^ 2;
 
 pos_feats = zeros(pos_nImages, featSize);
-for i=1:pos_nImages
+for i = 1 : pos_nImages
 	if ~debug
 		im = im2single(imread(fullfile(pos_imageDir, pos_imageList(i).name)));
 		feat = vl_hog(im, cellSize);
@@ -32,7 +32,7 @@ for i=1:pos_nImages
 end
 
 neg_feats = zeros(neg_nImages, featSize);
-for i = 1:neg_nImages
+for i = 1 : neg_nImages
 	if ~debug
 		im = im2single(imread(fullfile(neg_imageDir, neg_imageList(i).name)));
 		feat = vl_hog(im, cellSize);

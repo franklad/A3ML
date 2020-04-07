@@ -6,3 +6,4 @@ images_notfaces
 test_images
 *.jpg
 *.asv
+pos_neg_feats.mat
