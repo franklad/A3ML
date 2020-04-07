@@ -25,8 +25,6 @@ while n_have < n_want
 	cropped_image = imcrop(img, [ry rx dim - 1 dim - 1]);
 	
 	% write the image to file
-	rnd_suffix1 = int2str(randi(intmax));
-	rnd_suffix2 = int2str(randi(intmax));
-	imwrite(cropped_image, sprintf('%s/%s{%s%s}%s', new_imageDir, name, rnd_suffix1, rnd_suffix2, ext));
-	n_have = numel(dir(sprintf('%s/*.*', new_imageDir))) - 2;
+	imwrite(cropped_image, sprintf('%s/%s{%d}%s', new_imageDir, name, n_have, ext));
+	n_have = numel(dir(sprintf('%s/*.jpg', new_imageDir)));
 end

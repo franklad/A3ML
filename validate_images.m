@@ -60,6 +60,7 @@ else
 	feats = cat(1, pos_feats, neg_feats);
 	labels = cat(1, ones(pos_nImages, 1), -1 * ones(neg_nImages, 1));
 
-	[~, ~, ~, scores] = vl_svmtrain(feats', labels', 0, 'model', w, 'bias', b, 'solver', 'none') ;
+	[~, ~, ~, scores] = vl_svmtrain(feats', labels', 0, 'model', w, 'bias', b, 'solver', 'none');
+	fprintf('Classifier performance on validation data:\n')
 	report_accuracy(scores', labels);
 end
