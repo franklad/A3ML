@@ -4,11 +4,11 @@ clear
 debug = false;
 
 pos_imageDir = 'cropped_training_images_faces';
-pos_imageList = dir(sprintf('%s/*.jpg', pos_imageDir));
+pos_imageList = dir(fullfile(pos_imageDir, '*.jpg'));
 pos_nImages = length(pos_imageList);
 
 neg_imageDir = 'cropped_training_images_notfaces';
-neg_imageList = dir(sprintf('%s/*.jpg', neg_imageDir));
+neg_imageList = dir(fullfile(neg_imageDir, '*.jpg'));
 neg_nImages = length(neg_imageList);
 
 cellSize = 4;
@@ -17,7 +17,7 @@ featSize = 31 * round(36 / cellSize) ^ 2;
 pos_feats = zeros(pos_nImages, featSize);
 for i=1:pos_nImages
 	if ~debug
-		im = im2single(imread(sprintf('%s/%s', pos_imageDir, pos_imageList(i).name)));
+		im = im2single(imread(fullfile(pos_imageDir, pos_imageList(i).name)));
 		feat = vl_hog(im, cellSize);
 		pos_feats(i, :) = feat(:);
 	else
@@ -34,7 +34,7 @@ end
 neg_feats = zeros(neg_nImages, featSize);
 for i = 1:neg_nImages
 	if ~debug
-		im = im2single(imread(sprintf('%s/%s', neg_imageDir, neg_imageList(i).name)));
+		im = im2single(imread(fullfile(neg_imageDir, neg_imageList(i).name)));
 		feat = vl_hog(im, cellSize);
 		neg_feats(i, :) = feat(:);
 	else

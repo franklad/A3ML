@@ -3,7 +3,7 @@ n_have = 0;
 n_want = numel(dir('cropped_training_images_faces/*.jpg'));
 
 imageDir = 'images_notfaces';
-imageList = dir(sprintf('%s/*.jpg', imageDir));
+imageList = dir(fullfile(imageDir, '*.jpg'));
 nImages = length(imageList);
 
 new_imageDir = 'cropped_training_images_notfaces';
@@ -15,7 +15,7 @@ while n_have < n_want
 	% fetch a random image
 	rng_img_idx = randi(nImages);
 	img_path = imageList(rng_img_idx).name;
-	img = rgb2gray(imread(sprintf('%s/%s', imageDir, img_path)));
+	img = rgb2gray(imread(fullfile(imageDir, img_path)));
 	[~, name, ext] = fileparts(img_path);
 	
 	% generate a random 36x36 crop from the non-face image
@@ -25,6 +25,7 @@ while n_have < n_want
 	cropped_image = imcrop(img, [ry rx dim - 1 dim - 1]);
 	
 	% write the image to file
-	imwrite(cropped_image, sprintf('%s/%s{%d}%s', new_imageDir, name, n_have, ext));
-	n_have = numel(dir(sprintf('%s/*.jpg', new_imageDir)));
+	new_file = sprintf('%s{%d}%s', name, n_have, ext);
+	imwrite(cropped_image, fullfile(new_imageDir, new_file));
+	n_have = numel(dir(fullfile(new_imageDir, '*.jpg')));
 end

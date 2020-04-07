@@ -1,9 +1,9 @@
 pos_imageDir = 'cropped_training_images_faces';
-pos_imageList = dir(sprintf('%s/*.jpg', pos_imageDir));
+pos_imageList = dir(fullfile(pos_imageDir, '*.jpg'));
 pos_nImages = length(pos_imageList);
 
 neg_imageDir = 'cropped_training_images_notfaces';
-neg_imageList = dir(sprintf('%s/*.jpg', neg_imageDir));
+neg_imageList = dir(fullfile(neg_imageDir, '*.jpg'));
 neg_nImages = length(neg_imageList);
 
 % split images_faces to 80% training and 20% validation
@@ -15,12 +15,9 @@ if ~exist(pos_imageDir_v, 'dir')
 	
 	for i = 1:pos_nValid
 		name = pos_imageList(i).name;
-		src = sprintf('%s/%s', pos_imageDir, name);
+		src = fullfile(pos_imageDir, name);
 		movefile(src, pos_imageDir_v);
 	end
-
-	pos_imageList = dir(sprintf('%s/*.jpg', pos_imageDir));
-	pos_nImages = length(pos_imageList);
 end
 
 % split images_notfaces to 80% training and 20% validation
@@ -32,10 +29,7 @@ if ~exist(neg_imageDir_v, 'dir')
 
 	for i = 1:neg_nValid
 		name = neg_imageList(i).name;
-		src = sprintf('%s/%s', neg_imageDir, name);
+		src = fullfile(neg_imageDir, name);
 		movefile(src, neg_imageDir_v);
 	end
-
-	neg_imageList = dir(sprintf('%s/*.jpg', neg_imageDir));
-	neg_nImages = length(neg_imageList);
 end
