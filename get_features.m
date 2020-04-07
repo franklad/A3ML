@@ -68,11 +68,11 @@ end
 
 neg_feats = zeros(neg_nImages, featSize);
 for i = 1:neg_nImages
-	else
+	if ~debug
 		im = im2single(imread(sprintf('%s/%s', neg_imageDir, neg_imageList(i).name)));
 		feat = vl_hog(im, cellSize);
 		neg_feats(i, :) = feat(:);
-	if ~debug
+	else
 		fprintf('got feat for neg image %d/%d\n', i, neg_nImages);
 		imhog = vl_hog('render', feat);
 		subplot(1, 2, 1);
