@@ -29,7 +29,6 @@ for i = 1:folds
 		b_avg = (b + b_avg) / 2;
 		w_avg = (w + w_avg) / 2;
 	end
-	
 end
 
 save('my_svm.mat', 'w', 'b');

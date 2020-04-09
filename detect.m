@@ -1,5 +1,6 @@
 %run('../vlfeat-0.9.20/toolbox/vl_setup')
 imageDir = 'test_images';
+load('my_svm.mat');
 imageList = dir(fullfile(imageDir, '/*.jpg'));
 nImages = length(imageList);
 
@@ -14,22 +15,25 @@ for i = 1:nImages
 	im = im2single(imread(fullfile(imageDir, imageList(i).name)));
 	imshow(im);
 	hold on;
-	
+
 	% generate a grid of features across the entire image. you may want to 
 	% try generating features more densely (i.e., not in a grid)
-	feats = vl_hog(im,cellSize);
-	
+	feats = vl_hog(im, cellSize);
+
 	% concatenate the features into 6x6 bins, and classify them (as if they
 	% represent 36x36-pixel faces)
 	[rows, cols, ~] = size(feats);
 	confs = zeros(rows, cols);
-	for r = 1:rows - 5
-		for c = 1:cols - 5
-            hi = 'hi';
+	for r = 1:rows - 8
+		for c = 1:cols - 8
 		% create feature vector for the current window and classify it using the SVM model, 
 		% take dot product between feature vector and w and add b,
-	% store the result in the matrix of confidence scores confs(r,c)
-
+		% store the result in the matrix of confidence scores confs(r,c)
+		feat_range = [r r + 8 c c + 8];
+		feat = feats(feat_range(1):feat_range(2), feat_range(3):feat_range(4), :);
+		feat = feat(:)';
+		conf = feat * w + b;
+		confs(r, c) = conf;
 		end
 	end
 
