@@ -24,7 +24,7 @@ gt_isclaimed = zeros(length(gt_ids), 1);
 npos = size(gt_ids, 1); %total number of true positives.
 
 % sort detections by decreasing confidence
-[sc, si] = sort(-confidences);
+[~, si] = sort(-confidences);
 image_ids = image_ids(si);
 bboxes = bboxes(si, :);
 
@@ -58,7 +58,7 @@ for d = 1:nd
 			% compute overlap as area of intersection / area of union
 			ua = (bb(3) - bb(1) + 1)*(bb(4) - bb(2) + 1) +...
 				(bbgt(3) - bbgt(1) + 1) * (bbgt(4) - bbgt(2) + 1) -...
-				iw*ih;
+				iw * ih;
 			ov = iw * ih / ua;
 			if ov > ovmax %higher overlap than the previous best?
 				ovmax = ov;
@@ -113,7 +113,7 @@ grid;
 xlabel 'False positives'
 ylabel 'Number of correct detections (recall)'
 
-%% Re-sort return variables so that they are in the order of the input bboxes
+% Re-sort return variables so that they are in the order of the input bboxes
 reverse_map(si) = 1:nd;
 tp = tp(reverse_map);
 fp = fp(reverse_map);
