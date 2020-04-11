@@ -1,6 +1,9 @@
-function conf_out = NMS(conf_in)
+function conf_out = NMS(conf_in, thresh)
 	conf_out = [];
 	NSM_thresh = 0.15;
+	if nargin == 2
+		NSM_thresh = thresh;
+	end
 	pad = 1;
 	while ~isempty(conf_in)
 		conf = conf_in(1, :);
