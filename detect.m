@@ -10,7 +10,7 @@ image_names = cell(0, 1);
 
 cellSize = 8;
 offset = 8;
-scale_factors = [0.1 0.3 1.3];
+scale_factors = [0.5 0.5 1.5];
 for i = 1:nImages
 	% load and show the image
 	im = im2single(imread(fullfile(imageDir, imageList(i).name)));
@@ -88,4 +88,4 @@ end
 % evaluate
 label_path = 'test_images_gt.txt';
 [gt_ids, gt_bboxes, gt_isclaimed, tp, fp, duplicate_detections] = ...
-	evaluate_detections(bboxes, confidences, image_names, label_path);
+	evaluate_detections_on_test(bboxes, confidences, image_names, label_path);

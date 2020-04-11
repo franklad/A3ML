@@ -1,7 +1,7 @@
 function conf_out = NMS(conf_in)
 	num_boxes = size(conf_in, 1);
 	conf_out = [];
-    NSM_thresh = 0;
+    NSM_thresh = 0.15;
     pad = 1;
 	while ~isempty(conf_in)
 		conf = conf_in(1, :);
