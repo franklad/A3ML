@@ -8,46 +8,64 @@ bboxes = zeros(0, 4);
 confidences = zeros(0, 1);
 image_names = cell(0, 1);
 
-cellSize = 6;
-dim = 36;
+cellSize = 8;
+offset = 8;
+scale_factors = [0.1 0.3 1.3];
 for i = 1:nImages
 	% load and show the image
 	im = im2single(imread(fullfile(imageDir, imageList(i).name)));
+	close all
 	imshow(im);
 	hold on;
 
-	% generate a grid of features across the entire image. you may want to 
-	% try generating features more densely (i.e., not in a grid)
-	feats = vl_hog(im, cellSize);
-
-	% concatenate the features into 6x6 bins, and classify them (as if they
-	% represent 36x36-pixel faces)
-	[rows, cols, ~] = size(feats);
-	confs = zeros(rows, cols);
-	for r = 1:rows - 8
-		for c = 1:cols - 8
-		% create feature vector for the current window and classify it using the SVM model, 
-		% take dot product between feature vector and w and add b,
-		% store the result in the matrix of confidence scores confs(r,c)
-		feat_range = [r r + 8 c c + 8];
-		feat = feats(feat_range(1):feat_range(2), feat_range(3):feat_range(4), :);
-		feat = feat(:)';
-		conf = feat * w + b;
-		confs(r, c) = conf;
+	conf_vals = [];
+	for s = scale_factors(1):scale_factors(2):scale_factors(3)
+		% generate a grid of features across the entire image. you may want to 
+		% try generating features more densely (i.e., not in a grid)
+		im_s = imresize(im, s);
+		feats = vl_hog(im_s, cellSize);
+		% concatenate the features into 6x6 bins, and classify them (as if they
+		% represent 36x36-pixel faces)
+		[rows, cols, ~] = size(feats);
+		confs = [];
+		for r = 1:rows - offset
+			for c = 1:cols - offset
+				% create feature vector for the current window and classify it using the SVM model, 
+				% take dot product between feature vector and w and add b,
+				% store the result in the matrix of confidence scores confs(r,c)
+				feat = feats(r:r + offset, c:c + offset, :);
+				conf = feat(:)' * w + b;
+				confs = [confs; conf ...
+						c / s * cellSize ...
+						r / s * cellSize ...
+						(c / s + cellSize - 1) * cellSize...
+						(r / s + cellSize - 1) * cellSize];
+			end
 		end
+		if isempty(confs)
+			continue
+		end
+		[~, idx] = sort(confs(:, 1), 'descend');
+		confs = confs(idx, :);
+		confs = NMS(confs);
+		conf_len = min([+inf size(confs, 1)]);
+		confs = confs(1:conf_len, :);
+		conf_vals = [conf_vals; confs];
 	end
-
 	% get the most confident predictions 
-	[~, inds] = sort(confs(:), 'descend');
-	inds = inds(1: 20); % (use a bigger number for better recall)
-	for n = 1:numel(inds)
-		[row, col] = ind2sub([size(feats, 1) size(feats, 2)], inds(n));
+	[~, idx] = sort(conf_vals(:, 1), 'descend');
+	conf_vals = conf_vals(idx, :);
+	max_recall = 40;
+	max_recall = min([size(conf_vals, 1) max_recall]);
+	conf_vals = conf_vals(1:max_recall, :);
+	conf_vals = NMS(conf_vals);
+	for n = 1:size(conf_vals, 1)
+		conf = conf_vals(n, 1);
 
-		bbox = [col * cellSize ...
-				row * cellSize ...
-				(col + cellSize - 1) * cellSize ...
-				(row + cellSize - 1) * cellSize];
-		conf = confs(row, col);
+		bbox = [conf_vals(n, 2) ...
+				conf_vals(n, 3) ...
+				conf_vals(n, 4) ...
+				conf_vals(n, 5)];
 		image_name = {imageList(i).name};
 
 		% plot
