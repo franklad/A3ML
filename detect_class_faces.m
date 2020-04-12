@@ -6,7 +6,7 @@ bboxes = zeros(0, 4);
 confidences = zeros(0, 1);
 image_names = cell(0, 1);
 
-cellSize_factors = [7, 10, 16];
+cellSize_factors = [7, 8, 11, 16];
 offset = 8;
 scale_factors = [1 1 1];
 % load and show the image
@@ -38,8 +38,9 @@ for j = 1:3
 			confs = [confs; conf ...
 					c / s * cellSize ...
 					r / s * cellSize ...
-					(c / s + cellSize - 1) * cellSize...
-					(r / s + cellSize - 1) * cellSize];
+					(c / s + cellSize - 1) * cellSize ...
+					(r / s + cellSize - 1) * cellSize ...
+                    cellSize];
 		end
 	end
 	if isempty(confs)
@@ -47,18 +48,19 @@ for j = 1:3
 	end
 	[~, idx] = sort(confs(:, 1), 'descend');
 	confs = confs(idx, :);
-	confs = NMS(confs);
+	confs = NMS(confs, 0);
 	conf_len = min([+inf size(confs, 1)]);
 	confs = confs(1:conf_len, :);
 	conf_vals = [conf_vals; confs];
 end
 % get the most confident predictions 
+conf_vals(:, 1) = conf_vals(:, 1) .* conf_vals(:, 6);
 [~, idx] = sort(conf_vals(:, 1), 'descend');
 conf_vals = conf_vals(idx, :);
-max_recall = 40;
+max_recall = 130;
 max_recall = min([size(conf_vals, 1) max_recall]);
 conf_vals = conf_vals(1:max_recall, :);
-conf_vals = NMS(conf_vals);
+conf_vals = NMS(conf_vals, 0.01);
 for n = 1:size(conf_vals, 1)
 	conf = conf_vals(n, 1);
 		bbox = [conf_vals(n, 2) ...
