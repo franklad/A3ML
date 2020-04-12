@@ -21,7 +21,7 @@ s = 1;
 for j = 1:3
 	% generate a grid of features across the entire image. you may want to 
 	% try generating features more densely (i.e., not in a grid)
-    cellSize = cellSize_factors(j);
+	cellSize = cellSize_factors(j);
 	im_s = imresize(im, s);
 	feats = vl_hog(im_s, cellSize);
 	% concatenate the features into 6x6 bins, and classify them (as if they
@@ -40,7 +40,7 @@ for j = 1:3
 					r / s * cellSize ...
 					(c / s + cellSize - 1) * cellSize ...
 					(r / s + cellSize - 1) * cellSize ...
-                    cellSize];
+					cellSize];
 		end
 	end
 	if isempty(confs)
